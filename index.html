@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano de Vida</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Acompanhamento pessoal</p>
+        <h1>Plano de Vida</h1>
+        <p class="subtitle">Oracao, trabalho bem feito, vida familiar, formacao crista e apostolado de amizade.</p>
+      </div>
+
+      <div class="date-card" aria-live="polite">
+        <span>Data corrente</span>
+        <strong id="currentDate">--</strong>
+      </div>
+    </header>
+
+    <section class="dashboard" aria-live="polite">
+      <div class="metric">
+        <strong id="doneCount">0</strong>
+        <span>itens concluidos</span>
+      </div>
+      <div class="metric">
+        <strong id="totalCount">0</strong>
+        <span>itens no plano</span>
+      </div>
+      <div class="metric">
+        <strong id="percentCount">0%</strong>
+        <span>andamento de hoje</span>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button type="button" id="editPlan">Editar</button>
+      <button type="button" class="edit-only" id="restoreDefaults">Restaurar padrao</button>
+      <button type="button" id="clearDay">Limpar hoje</button>
+    </div>
+
+    <main class="layout">
+      <div class="main-column">
+        <section class="panel main-panel">
+          <div class="panel-header">
+            <h2>Diariamente</h2>
+            <span class="pill" id="dailyCount">0/0</span>
+          </div>
+          <ul class="checklist" id="dailyList"></ul>
+          <form class="add-item-form edit-only" data-add-section="daily">
+            <div>
+              <label for="newDailyTitle">Novo item</label>
+              <input id="newDailyTitle" name="title" type="text" placeholder="Ex.: Laudes" autocomplete="off" required>
+            </div>
+            <div>
+              <label for="newDailyNote">Observacao</label>
+              <input id="newDailyNote" name="note" type="text" placeholder="Opcional" autocomplete="off">
+            </div>
+            <button type="submit">Adicionar</button>
+          </form>
+        </section>
+
+        <section class="panel links-panel">
+          <div class="panel-header">
+            <h2>Links uteis</h2>
+          </div>
+          <a class="daily-reading-card text-only" id="tomorrowGospelLink" href="https://evangelhoquotidiano.org/PT/gospel/2026-05-05" target="_blank" rel="noreferrer">
+            <div class="daily-reading-content">
+              <p class="daily-reading-kicker">Evangelho de amanha</p>
+              <h4>Evangelho Quotidiano</h4>
+              <p id="tomorrowGospelDate">Abrir a leitura do Evangelho do dia seguinte.</p>
+              <span class="daily-reading-link">Abrir Evangelho de amanha</span>
+            </div>
+          </a>
+          <a class="daily-reading-card text-only" id="dailyMeditationLink" href="https://opusdei.org/pt-br/dailytext/" target="_blank" rel="noreferrer">
+            <div class="daily-reading-content">
+              <p class="daily-reading-kicker">Meditacao diaria</p>
+              <h4 id="dailyMeditationTitle">Meditacao do dia</h4>
+              <span class="daily-reading-link">Abrir texto de hoje</span>
+            </div>
+          </a>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Semanalmente</h2>
+          </div>
+          <ul class="checklist" id="weeklyList"></ul>
+          <form class="add-item-form edit-only compact-form" data-add-section="weekly">
+            <div>
+              <label for="newWeeklyTitle">Novo item</label>
+              <input id="newWeeklyTitle" name="title" type="text" placeholder="Ex.: Estudo doutrinal" autocomplete="off" required>
+            </div>
+            <div>
+              <label for="newWeeklyNote">Observacao</label>
+              <input id="newWeeklyNote" name="note" type="text" placeholder="Opcional" autocomplete="off">
+            </div>
+            <button type="submit">Adicionar</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Mensal e anual</h2>
+          </div>
+          <ul class="checklist" id="periodicList"></ul>
+          <form class="add-item-form edit-only compact-form" data-add-section="periodic">
+            <div>
+              <label for="newPeriodicTitle">Novo item</label>
+              <input id="newPeriodicTitle" name="title" type="text" placeholder="Ex.: Revisao mensal" autocomplete="off" required>
+            </div>
+            <div>
+              <label for="newPeriodicNote">Observacao</label>
+              <input id="newPeriodicNote" name="note" type="text" placeholder="Opcional" autocomplete="off">
+            </div>
+            <button type="submit">Adicionar</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Notas de hoje</h2>
+          </div>
+          <textarea id="notes" placeholder="Escreva um proposito, agradecimento ou ponto para conversar na direcao espiritual."></textarea>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="src/data.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>

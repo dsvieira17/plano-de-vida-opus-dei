@@ -6,19 +6,15 @@ const planItems = {
     },
     {
       id: "missa",
-      title: "Santa Missa, quando possível"
+      title: "Santa Missa"
+    },
+    {
+      id: "santissimo",
+      title: "Visita ao Santíssimo Sacramento"
     },
     {
       id: "oracao-mental-manha",
-      title: "Oração mental pela manhã"
-    },
-    {
-      id: "evangelho",
-      title: "Leitura do Evangelho ou Novo Testamento"
-    },
-    {
-      id: "leitura-espiritual",
-      title: "Leitura espiritual"
+      title: "Oração mental da manhã"
     },
     {
       id: "angelus",
@@ -26,7 +22,15 @@ const planItems = {
     },
     {
       id: "oracao-mental-tarde",
-      title: "Oração mental à tarde ou à noite"
+      title: "Oração mental da tarde"
+    },
+    {
+      id: "leitura-espiritual",
+      title: "Leitura espiritual"
+    },
+    {
+      id: "evangelho",
+      title: "Leitura do Evangelho"
     },
     {
       id: "terco",
@@ -35,28 +39,16 @@ const planItems = {
     {
       id: "exame",
       title: "Exame de consciência à noite"
+    },
+    {
+      id: "tres-ave-marias",
+      title: "3 Ave-Marias antes de dormir"
     }
   ],
   weekly: [
     {
       id: "confissao",
       title: "Confissão frequente"
-    },
-    {
-      id: "conversa-fraterna",
-      title: "Conversa fraterna"
-    },
-    {
-      id: "circulo",
-      title: "Círculo ou meio de formação"
-    },
-    {
-      id: "santissimo",
-      title: "Visita ao Santíssimo Sacramento"
-    },
-    {
-      id: "apostolado",
-      title: "Apostolado de amizade"
     }
   ],
   monthly: [
@@ -65,18 +57,14 @@ const planItems = {
       title: "Recoleção mensal"
     },
     {
-      id: "revisao-plano",
-      title: "Revisão do plano de vida"
+      id: "circulo",
+      title: "Círculo"
     }
   ],
   yearly: [
     {
       id: "retiro",
-      title: "Retiro espiritual anual"
-    },
-    {
-      id: "curso-anual",
-      title: "Curso anual ou dias de formação"
+      title: "Retiro espiritual"
     }
   ]
 };

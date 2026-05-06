@@ -59,7 +59,7 @@ const planItems = {
       title: "Apostolado de amizade"
     }
   ],
-  periodic: [
+  monthly: [
     {
       id: "recolecao",
       title: "Recoleção mensal"
@@ -67,7 +67,9 @@ const planItems = {
     {
       id: "revisao-plano",
       title: "Revisão do plano de vida"
-    },
+    }
+  ],
+  yearly: [
     {
       id: "retiro",
       title: "Retiro espiritual anual"

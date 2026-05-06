@@ -82,6 +82,16 @@
               <span class="daily-reading-link">Abrir texto de hoje</span>
             </div>
           </a>
+          <article class="daily-reading-card text-only" id="rosaryOfDayCard">
+            <div class="daily-reading-content">
+              <p class="daily-reading-kicker">Terco do dia</p>
+              <h4 id="rosaryOfDayTitle">Mistérios do terço</h4>
+              <p id="rosaryOfDayMysteries">Carregando misterios do dia...</p>
+              <ol id="rosaryOfDaySteps" class="rosary-steps"></ol>
+              <p id="rosaryClosingPrayer" class="rosary-closing"></p>
+              <button type="button" id="markRosaryDone" class="rosary-done-button">Marcar terco rezado</button>
+            </div>
+          </article>
         </section>
       </div>
 
@@ -106,17 +116,35 @@
 
         <section class="panel">
           <div class="panel-header">
-            <h2>Mensal e anual</h2>
+            <h2>Mensalmente</h2>
           </div>
-          <ul class="checklist" id="periodicList"></ul>
-          <form class="add-item-form edit-only compact-form" data-add-section="periodic">
+          <ul class="checklist" id="monthlyList"></ul>
+          <form class="add-item-form edit-only compact-form" data-add-section="monthly">
             <div>
-              <label for="newPeriodicTitle">Novo item</label>
-              <input id="newPeriodicTitle" name="title" type="text" placeholder="Ex.: Revisao mensal" autocomplete="off" required>
+              <label for="newMonthlyTitle">Novo item</label>
+              <input id="newMonthlyTitle" name="title" type="text" placeholder="Ex.: Revisao mensal" autocomplete="off" required>
             </div>
             <div>
-              <label for="newPeriodicNote">Observacao</label>
-              <input id="newPeriodicNote" name="note" type="text" placeholder="Opcional" autocomplete="off">
+              <label for="newMonthlyNote">Observacao</label>
+              <input id="newMonthlyNote" name="note" type="text" placeholder="Opcional" autocomplete="off">
+            </div>
+            <button type="submit">Adicionar</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Anualmente</h2>
+          </div>
+          <ul class="checklist" id="yearlyList"></ul>
+          <form class="add-item-form edit-only compact-form" data-add-section="yearly">
+            <div>
+              <label for="newYearlyTitle">Novo item</label>
+              <input id="newYearlyTitle" name="title" type="text" placeholder="Ex.: Curso anual" autocomplete="off" required>
+            </div>
+            <div>
+              <label for="newYearlyNote">Observacao</label>
+              <input id="newYearlyNote" name="note" type="text" placeholder="Opcional" autocomplete="off">
             </div>
             <button type="submit">Adicionar</button>
           </form>

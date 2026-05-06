@@ -1,16 +1,30 @@
 const today = new Date();
 const dayKey = today.toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
-const storageKey = `plano-de-vida:${dayKey}`;
+const weekDayCode = today.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Sao_Paulo" });
+const weekDayIndexMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+const weekDayIndex = weekDayIndexMap[weekDayCode] ?? 0;
+const weekStartKey = getWeekStartKey(dayKey, weekDayIndex);
+const monthKey = dayKey.slice(0, 7);
+const yearKey = dayKey.slice(0, 4);
+const legacyStorageKey = `plano-de-vida:${dayKey}`;
 const notesKey = `plano-de-vida-notas:${dayKey}`;
 const planConfigKey = "plano-de-vida-config";
 const oldCustomItemsKey = "plano-de-vida-custom-items";
 const oldRemovedItemsKey = "plano-de-vida-removed-items";
 const oldDailyOrderKey = "plano-de-vida-daily-order";
 
+const stateKeys = {
+  daily: `plano-de-vida:daily:${dayKey}`,
+  weekly: `plano-de-vida:weekly:${weekStartKey}`,
+  monthly: `plano-de-vida:monthly:${monthKey}`,
+  yearly: `plano-de-vida:yearly:${yearKey}`
+};
+
 const sectionLabels = {
   daily: "Diariamente",
   weekly: "Semanalmente",
-  periodic: "Mensal e anual"
+  monthly: "Mensalmente",
+  yearly: "Anualmente"
 };
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
@@ -31,7 +45,8 @@ const shortDateFormatter = new Intl.DateTimeFormat("pt-BR", {
 const lists = {
   daily: document.querySelector("#dailyList"),
   weekly: document.querySelector("#weeklyList"),
-  periodic: document.querySelector("#periodicList")
+  monthly: document.querySelector("#monthlyList"),
+  yearly: document.querySelector("#yearlyList")
 };
 
 const currentDate = document.querySelector("#currentDate");
@@ -39,6 +54,11 @@ const tomorrowGospelLink = document.querySelector("#tomorrowGospelLink");
 const tomorrowGospelDate = document.querySelector("#tomorrowGospelDate");
 const dailyMeditationLink = document.querySelector("#dailyMeditationLink");
 const dailyMeditationTitle = document.querySelector("#dailyMeditationTitle");
+const rosaryOfDayTitle = document.querySelector("#rosaryOfDayTitle");
+const rosaryOfDayMysteries = document.querySelector("#rosaryOfDayMysteries");
+const rosaryOfDaySteps = document.querySelector("#rosaryOfDaySteps");
+const rosaryClosingPrayer = document.querySelector("#rosaryClosingPrayer");
+const markRosaryDone = document.querySelector("#markRosaryDone");
 const notes = document.querySelector("#notes");
 const doneCount = document.querySelector("#doneCount");
 const totalCount = document.querySelector("#totalCount");
@@ -49,15 +69,25 @@ const editPlan = document.querySelector("#editPlan");
 const restoreDefaults = document.querySelector("#restoreDefaults");
 const addItemForms = Array.from(document.querySelectorAll("[data-add-section]"));
 
-const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
 const defaultItems = Object.entries(planItems).flatMap(([section, items]) =>
   items.map((item) => ({ ...item, defaultSection: section }))
 );
 const defaultItemIds = defaultItems.map((item) => item.id);
+const defaultItemsById = Object.fromEntries(defaultItems.map((item) => [item.id, item]));
 
 let planConfig = loadPlanConfig();
+const savedBySection = loadSavedStatesBySection();
 let isEditing = false;
 let pendingSectionChanges = {};
+
+function getWeekStartKey(dateKey, weekdayIndex) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const weekStart = new Date(Date.UTC(year, month - 1, day - weekdayIndex));
+  const weekYear = weekStart.getUTCFullYear();
+  const weekMonth = String(weekStart.getUTCMonth() + 1).padStart(2, "0");
+  const weekDay = String(weekStart.getUTCDate()).padStart(2, "0");
+  return `${weekYear}-${weekMonth}-${weekDay}`;
+}
 
 function getTomorrowKey(dateKey) {
   const [year, month, day] = dateKey.split("-").map(Number);
@@ -101,6 +131,116 @@ function parseMeditationFromPlainText(text) {
   return {
     title: `"${stripQuotes(normalizeWhitespace(titleMatch[1]))}"`
   };
+}
+
+function loadRosaryOfDay() {
+  if (!rosaryOfDayTitle || !rosaryOfDayMysteries || !rosaryOfDaySteps || !rosaryClosingPrayer) {
+    return;
+  }
+
+  const weekdayCode = today.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Sao_Paulo" });
+  const rosaryByWeekday = {
+    Mon: {
+      title: "Mistérios Gozosos",
+      mysteries: [
+        "Anunciação do anjo a Maria.",
+        "Visitação de Maria a Santa Isabel.",
+        "Nascimento de Jesus em Belém.",
+        "Apresentação de Jesus no Templo.",
+        "Perda e encontro do Menino Jesus no Templo."
+      ]
+    },
+    Tue: {
+      title: "Mistérios Dolorosos",
+      mysteries: [
+        "Agonia de Jesus no Horto.",
+        "Flagelação de Jesus.",
+        "Coroação de espinhos.",
+        "Jesus carrega a cruz para o Calvário.",
+        "Crucifixão e morte de Jesus."
+      ]
+    },
+    Wed: {
+      title: "Mistérios Gloriosos",
+      mysteries: [
+        "Ressurreição de Jesus.",
+        "Ascensão de Jesus ao Céu.",
+        "Vinda do Espírito Santo.",
+        "Assunção de Nossa Senhora.",
+        "Coroação de Maria como Rainha do Céu e da Terra."
+      ]
+    },
+    Thu: {
+      title: "Mistérios Luminosos",
+      mysteries: [
+        "Batismo de Jesus no Jordão.",
+        "Autorrevelação de Jesus nas Bodas de Caná.",
+        "Anúncio do Reino e convite à conversão.",
+        "Transfiguração de Jesus.",
+        "Instituição da Eucaristia."
+      ]
+    },
+    Fri: {
+      title: "Mistérios Dolorosos",
+      mysteries: [
+        "Agonia de Jesus no Horto.",
+        "Flagelação de Jesus.",
+        "Coroação de espinhos.",
+        "Jesus carrega a cruz para o Calvário.",
+        "Crucifixão e morte de Jesus."
+      ]
+    },
+    Sat: {
+      title: "Mistérios Gozosos",
+      mysteries: [
+        "Anunciação do anjo a Maria.",
+        "Visitação de Maria a Santa Isabel.",
+        "Nascimento de Jesus em Belém.",
+        "Apresentação de Jesus no Templo.",
+        "Perda e encontro do Menino Jesus no Templo."
+      ]
+    },
+    Sun: {
+      title: "Mistérios Gloriosos",
+      mysteries: [
+        "Ressurreição de Jesus.",
+        "Ascensão de Jesus ao Céu.",
+        "Vinda do Espírito Santo.",
+        "Assunção de Nossa Senhora.",
+        "Coroação de Maria como Rainha do Céu e da Terra."
+      ]
+    }
+  };
+
+  const rosary = rosaryByWeekday[weekdayCode] || rosaryByWeekday.Mon;
+  rosaryOfDayTitle.textContent = rosary.title;
+  rosaryOfDayMysteries.textContent = "Oração inicial: Oferecimento, Credo, Pai-Nosso, 3 Ave-Marias e Glória.";
+  rosaryOfDaySteps.replaceChildren(
+    ...rosary.mysteries.map((mystery, index) => {
+      const item = document.createElement("li");
+      const mysteryLine = document.createElement("span");
+      const prayerLine = document.createElement("span");
+      mysteryLine.textContent = `${index + 1}º mistério: ${mystery}`;
+      prayerLine.textContent = "Pai-Nosso, 10 Ave-Marias e Glória.";
+      prayerLine.className = "rosary-step-prayer";
+      item.append(mysteryLine, prayerLine);
+      return item;
+    })
+  );
+  rosaryClosingPrayer.textContent = "Oração final: Salve Rainha.";
+}
+
+function markRosaryAsDone() {
+  const rosaryCheckbox = document.querySelector("input[type='checkbox'][data-id='terco']");
+  if (!rosaryCheckbox) {
+    return;
+  }
+
+  const section = rosaryCheckbox.dataset.section || "daily";
+  rosaryCheckbox.checked = true;
+  rosaryCheckbox.closest("li")?.classList.add("checked");
+  saveSectionState(section);
+  updateSummary();
 }
 
 async function fetchTextWithFallback(url) {
@@ -154,19 +294,95 @@ function createInitialOrder() {
   return {
     daily: planItems.daily.map((item) => item.id),
     weekly: planItems.weekly.map((item) => item.id),
-    periodic: planItems.periodic.map((item) => item.id)
+    monthly: planItems.monthly.map((item) => item.id),
+    yearly: planItems.yearly.map((item) => item.id)
   };
+}
+
+function normalizeSection(section) {
+  if (section === "periodic") {
+    return "monthly";
+  }
+
+  return Object.prototype.hasOwnProperty.call(sectionLabels, section) ? section : "daily";
+}
+
+function getResolvedSectionById(itemId, config) {
+  const customItem = config.custom.find((item) => item.id === itemId);
+
+  if (customItem) {
+    return normalizeSection(customItem.section);
+  }
+
+  if (config.sections[itemId]) {
+    return normalizeSection(config.sections[itemId]);
+  }
+
+  return defaultItemsById[itemId]?.defaultSection || "daily";
+}
+
+function normalizeOrder(order, config) {
+  const normalized = createInitialOrder();
+
+  Object.entries(order || {}).forEach(([rawSection, ids]) => {
+    if (!Array.isArray(ids)) {
+      return;
+    }
+
+    const section = normalizeSection(rawSection);
+
+    ids.forEach((id) => {
+      const targetSection = rawSection === "periodic" ? getResolvedSectionById(id, config) : section;
+
+      if (!normalized[targetSection].includes(id)) {
+        normalized[targetSection].push(id);
+      }
+    });
+  });
+
+  return normalized;
+}
+
+function loadSavedStatesBySection() {
+  const loaded = Object.fromEntries(
+    Object.entries(stateKeys).map(([section, key]) => [section, JSON.parse(localStorage.getItem(key) || "{}")])
+  );
+
+  const hasAnySectionState = Object.values(loaded).some((state) => Object.keys(state).length > 0);
+  const legacyState = JSON.parse(localStorage.getItem(legacyStorageKey) || "null");
+
+  if (!hasAnySectionState && legacyState) {
+    Object.entries(legacyState).forEach(([itemId, checked]) => {
+      if (!checked) {
+        return;
+      }
+
+      const section = getResolvedSectionById(itemId, planConfig);
+      loaded[section][itemId] = true;
+    });
+    Object.entries(stateKeys).forEach(([section, key]) => {
+      localStorage.setItem(key, JSON.stringify(loaded[section]));
+    });
+  }
+
+  return loaded;
 }
 
 function loadPlanConfig() {
   const stored = JSON.parse(localStorage.getItem(planConfigKey) || "null");
 
   if (stored) {
-    return {
+    const baseConfig = {
       removed: stored.removed || [],
-      custom: stored.custom || [],
-      sections: stored.sections || {},
-      order: { ...createInitialOrder(), ...(stored.order || {}) }
+      custom: (stored.custom || []).map((item) => ({ ...item, section: normalizeSection(item.section || "daily") })),
+      sections: Object.fromEntries(
+        Object.entries(stored.sections || {}).map(([id, section]) => [id, normalizeSection(section)])
+      )
+    };
+
+    return {
+      ...baseConfig,
+      order: normalizeOrder(stored.order || {}, baseConfig)
     };
   }
 
@@ -186,8 +402,10 @@ function migrateOldConfig() {
     ];
   }
 
-  oldCustom.forEach((item) => {
-    const section = item.section || "daily";
+  const custom = oldCustom.map((item) => ({ ...item, section: normalizeSection(item.section || "daily") }));
+
+  custom.forEach((item) => {
+    const section = item.section;
     if (!order[section].includes(item.id)) {
       order[section].push(item.id);
     }
@@ -195,7 +413,7 @@ function migrateOldConfig() {
 
   const migrated = {
     removed: oldRemoved,
-    custom: oldCustom,
+    custom,
     sections: {},
     order
   };
@@ -248,7 +466,8 @@ function createChecklistItem(item, section, index, total) {
 
   checkbox.type = "checkbox";
   checkbox.dataset.id = item.id;
-  checkbox.checked = Boolean(saved[item.id]);
+  checkbox.dataset.section = section;
+  checkbox.checked = Boolean(savedBySection[section]?.[item.id]);
 
   itemShell.className = "checklist-item";
 
@@ -310,7 +529,7 @@ function createChecklistItem(item, section, index, total) {
 
   checkbox.addEventListener("change", () => {
     row.classList.toggle("checked", checkbox.checked);
-    saveState();
+    saveSectionState(section);
     updateSummary();
   });
 
@@ -329,25 +548,26 @@ function getCheckboxes() {
   return Array.from(document.querySelectorAll("input[type='checkbox']"));
 }
 
-function saveState() {
+function saveSectionState(section) {
   const state = {};
-  getCheckboxes().forEach((checkbox) => {
+  Array.from(lists[section].querySelectorAll("input[type='checkbox']")).forEach((checkbox) => {
     state[checkbox.dataset.id] = checkbox.checked;
   });
-  Object.keys(saved).forEach((id) => delete saved[id]);
-  Object.assign(saved, state);
-  localStorage.setItem(storageKey, JSON.stringify(state));
+  savedBySection[section] = state;
+  localStorage.setItem(stateKeys[section], JSON.stringify(state));
+}
+
+function saveAllSectionStates() {
+  Object.keys(lists).forEach((section) => saveSectionState(section));
 }
 
 function updateSummary() {
-  const checkboxes = getCheckboxes();
-  const checked = checkboxes.filter((checkbox) => checkbox.checked).length;
   const dailyBoxes = Array.from(lists.daily.querySelectorAll("input[type='checkbox']"));
   const dailyDone = dailyBoxes.filter((checkbox) => checkbox.checked).length;
-  const percent = checkboxes.length ? Math.round((checked / checkboxes.length) * 100) : 0;
+  const percent = dailyBoxes.length ? Math.round((dailyDone / dailyBoxes.length) * 100) : 0;
 
-  doneCount.textContent = String(checked);
-  totalCount.textContent = String(checkboxes.length);
+  doneCount.textContent = String(dailyDone);
+  totalCount.textContent = String(dailyBoxes.length);
   percentCount.textContent = `${percent}%`;
   dailyCount.textContent = `${dailyDone}/${dailyBoxes.length}`;
 }
@@ -359,7 +579,10 @@ function clearToday() {
   });
 
   notes.value = "";
-  localStorage.removeItem(storageKey);
+  Object.entries(stateKeys).forEach(([section, key]) => {
+    savedBySection[section] = {};
+    localStorage.removeItem(key);
+  });
   localStorage.removeItem(notesKey);
   updateSummary();
 }
@@ -379,9 +602,11 @@ function removeItem(item) {
   }
 
   removeFromOrders(item.id);
-  delete saved[item.id];
+  Object.keys(savedBySection).forEach((section) => {
+    delete savedBySection[section][item.id];
+  });
   renderPlan();
-  saveState();
+  saveAllSectionStates();
   updateSummary();
 }
 
@@ -419,6 +644,15 @@ function moveItemToSection(item, targetSection) {
 
   removeFromOrders(item.id);
   planConfig.order[targetSection] = [...(planConfig.order[targetSection] || []), item.id];
+  const checked = Boolean(savedBySection[currentSection] && savedBySection[currentSection][item.id]);
+  if (savedBySection[currentSection]) {
+    delete savedBySection[currentSection][item.id];
+  }
+  if (checked) {
+    savedBySection[targetSection][item.id] = true;
+  }
+  saveSectionState(currentSection);
+  saveSectionState(targetSection);
   renderPlan();
   updateSummary();
 }
@@ -507,12 +741,16 @@ if (tomorrowGospelLink && tomorrowGospelDate) {
 }
 
 loadDailyMeditation();
+loadRosaryOfDay();
 notes.value = localStorage.getItem(notesKey) || "";
 notes.addEventListener("input", () => localStorage.setItem(notesKey, notes.value));
 clearDay.addEventListener("click", clearToday);
 editPlan.addEventListener("click", toggleEditMode);
 restoreDefaults.addEventListener("click", restoreDefaultItems);
 addItemForms.forEach((form) => form.addEventListener("submit", addCustomItem));
+if (markRosaryDone) {
+  markRosaryDone.addEventListener("click", markRosaryAsDone);
+}
 
 renderPlan();
 updateSummary();

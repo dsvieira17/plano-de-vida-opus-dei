@@ -397,6 +397,35 @@ input[type="checkbox"] {
   color: var(--muted);
 }
 
+.rosary-steps {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  list-style: none;
+  color: var(--ink);
+}
+
+.rosary-steps li + li {
+  margin-top: 6px;
+}
+
+.rosary-steps li span {
+  display: block;
+}
+
+.rosary-step-prayer {
+  color: var(--muted);
+}
+
+.rosary-closing {
+  margin-top: 12px;
+}
+
+.rosary-done-button {
+  margin-top: 14px;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .daily-reading-link {
   display: inline-block;
   margin-top: 16px;

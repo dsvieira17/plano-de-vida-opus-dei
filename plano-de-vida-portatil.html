@@ -5,459 +5,501 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Plano de Vida Portatil</title>
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #f6f3ec;
-      --surface: #fffdf8;
-      --surface-muted: #fbf8f0;
-      --ink: #202124;
-      --muted: #666b72;
-      --line: #ded7c8;
-      --accent: #1f6f63;
-      --accent-soft: #dfeeea;
-      --shadow: 0 18px 45px rgba(38, 32, 22, 0.12);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #fffdf8 0%, var(--bg) 100%);
-      color: var(--ink);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.5;
-    }
-
-    .app {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 48px;
-    }
-
-    .topbar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: end;
-      padding: 24px 0 22px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .eyebrow {
-      margin: 0 0 6px;
-      color: var(--accent);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    h1, h2, p { margin-top: 0; }
-    h3, h4 { margin: 0; letter-spacing: 0; }
-
-    h1 {
-      margin-bottom: 8px;
-      font-size: clamp(1.75rem, 2vw, 2.4rem);
-    }
-
-    h2 {
-      margin-bottom: 0;
-      font-size: 1.05rem;
-    }
-
-    .subtitle {
-      max-width: 720px;
-      margin-bottom: 0;
-      color: var(--muted);
-    }
-
-    .date-card {
-      min-width: 230px;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      border-radius: 8px;
-      text-align: right;
-    }
-
-    .date-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .date-card strong {
-      display: block;
-      margin-top: 3px;
-      font-size: 1.05rem;
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    .metric {
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      border-radius: 8px;
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 1.45rem;
-      line-height: 1.1;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin: 18px 0 22px;
-    }
-
-    button {
-      appearance: none;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      color: var(--ink);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    button:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.45;
-    }
-
-    .edit-only { display: none; }
-    .is-editing .edit-only { display: grid; }
-    .actions .edit-only { display: none; }
-    .is-editing .actions .edit-only { display: inline-block; }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.35fr 0.65fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .main-column,
-    .side-column {
-      display: grid;
-      gap: 18px;
-    }
-
-    .panel {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-      background: var(--surface-muted);
-    }
-
-    .pill {
-      flex: 0 0 auto;
-      color: var(--accent);
-      background: var(--accent-soft);
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.86rem;
-      font-weight: 700;
-    }
-
-    .checklist {
-      list-style: none;
-      margin: 0;
-      padding: 8px;
-    }
-
-    .checklist li + li {
-      border-top: 1px solid #eee8dc;
-    }
-
-    .checklist-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-    }
-
-    label {
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 10px;
-      align-items: start;
-      padding: 12px 10px;
-      cursor: pointer;
-    }
-
-    input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      margin: 2px 0 0;
-      accent-color: var(--accent);
-    }
-
-    .item-title {
-      display: block;
-      font-weight: 700;
-    }
-
-    .item-note {
-      display: block;
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .checked .item-title,
-    .checked .item-note {
-      color: #7a7d80;
-      text-decoration: line-through;
-      text-decoration-thickness: 1px;
-    }
-
-    .item-edit-controls {
-      grid-template-columns: minmax(128px, 1fr) auto;
-      gap: 6px;
-      align-items: center;
-      padding-right: 8px;
-    }
-
-    .item-edit-controls.has-order-controls {
-      grid-template-columns: repeat(2, auto) minmax(128px, 1fr) auto;
-    }
-
-    .move-item,
-    .remove-item {
-      padding: 8px 10px;
-      font-size: 0.85rem;
-    }
-
-    .move-item {
-      color: var(--accent);
-    }
-
-    .move-item:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .remove-item {
-      color: #8a3b2a;
-    }
-
-    .remove-item:hover {
-      border-color: #8a3b2a;
-      color: #8a3b2a;
-    }
-
-    .section-select {
-      min-height: 38px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 7px 8px;
-      background: var(--surface);
-      color: var(--ink);
-      font: inherit;
-      font-size: 0.85rem;
-      outline-color: var(--accent);
-    }
-
-    .add-item-form {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr auto;
-      gap: 10px;
-      align-items: end;
-      padding: 14px 16px 16px;
-      border-top: 1px solid var(--line);
-      background: var(--surface-muted);
-    }
-
-    .add-item-form.edit-only { display: none; }
-    .is-editing .add-item-form.edit-only { display: grid; }
-
-    .add-item-form label {
-      display: block;
-      padding: 0;
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .add-item-form input {
-      width: 100%;
-      min-height: 42px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 9px 10px;
-      background: var(--surface);
-      color: var(--ink);
-      font: inherit;
-      outline-color: var(--accent);
-    }
-
-    .compact-form { grid-template-columns: 1fr; }
-    .links-panel { overflow: hidden; }
-
-    .daily-reading-card {
-      display: block;
-      border: 0;
-      border-top: 1px solid #eee8dc;
-      background: var(--surface);
-      color: inherit;
-      text-decoration: none;
-      box-shadow: none;
-    }
-
-    .daily-reading-card:hover { background: #fdfbf5; }
-
-    .daily-reading-content {
-      padding: 22px 22px 20px;
-    }
-
-    .daily-reading-kicker {
-      margin-bottom: 10px;
-      color: var(--accent);
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .daily-reading-content h4 {
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-      line-height: 1.25;
-    }
-
-    .daily-reading-content p {
-      margin-bottom: 0;
-      color: var(--muted);
-    }
-
-    .rosary-steps {
-      margin: 12px 0 0;
-      padding-left: 18px;
-      list-style: none;
-      color: var(--ink);
-    }
-
-    .rosary-steps li + li {
-      margin-top: 6px;
-    }
-
-    .rosary-steps li span {
-      display: block;
-    }
-
-    .rosary-step-prayer {
-      color: var(--muted);
-    }
-
-    .rosary-closing {
-      margin-top: 12px;
-    }
-
-    .rosary-done-button {
-      margin-top: 14px;
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .daily-reading-link {
-      display: inline-block;
-      margin-top: 16px;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 180px;
-      border: 0;
-      border-top: 1px solid var(--line);
-      resize: vertical;
-      padding: 14px 16px;
-      background: var(--surface);
-      color: var(--ink);
-      font: inherit;
-      outline-color: var(--accent);
-    }
-
-    @media (max-width: 820px) {
-      .app {
-        width: min(100% - 22px, 680px);
-        padding-top: 16px;
-      }
-
-      .topbar,
-      .dashboard,
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .date-card {
-        min-width: 0;
-        text-align: left;
-      }
-
-      .actions { justify-content: stretch; }
-      button { width: 100%; }
-
-      .checklist-item,
-      .add-item-form {
-        grid-template-columns: 1fr;
-      }
-
-      .item-edit-controls,
-      .item-edit-controls.has-order-controls {
-        grid-template-columns: 1fr 1fr;
-        padding: 0 8px 10px;
-      }
-
-      .move-item,
-      .remove-item,
-      .section-select {
-        width: 100%;
-      }
-
-      .section-select {
-        grid-column: 1 / -1;
-      }
-    }
+:root {
+  color-scheme: light;
+  --bg: #f6f3ec;
+  --surface: #fffdf8;
+  --surface-muted: #fbf8f0;
+  --ink: #202124;
+  --muted: #666b72;
+  --line: #ded7c8;
+  --accent: #1f6f63;
+  --accent-soft: #dfeeea;
+  --gold: #b7791f;
+  --shadow: 0 18px 45px rgba(38, 32, 22, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--bg) 100%);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+
+.app {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: end;
+  padding: 24px 0 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h3 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: clamp(1.75rem, 2vw, 2.4rem);
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1.05rem;
+  letter-spacing: 0;
+}
+
+.subtitle {
+  max-width: 720px;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.date-card {
+  min-width: 230px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  text-align: right;
+}
+
+.date-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.date-card strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.05rem;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.metric {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 8px;
+}
+
+.metric strong {
+  display: block;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.metric span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 18px 0 22px;
+}
+
+button {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.edit-only {
+  display: none;
+}
+
+.is-editing .edit-only {
+  display: grid;
+}
+
+.actions .edit-only {
+  display: none;
+}
+
+.is-editing .actions .edit-only {
+  display: inline-block;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.main-column,
+.side-column {
+  display: grid;
+  gap: 18px;
+}
+
+.panel {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+
+.pill {
+  flex: 0 0 auto;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+}
+
+.checklist li + li {
+  border-top: 1px solid #eee8dc;
+}
+
+.checklist-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+label {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 12px 10px;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+
+.item-title {
+  display: block;
+  font-weight: 700;
+}
+
+.item-note {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.checked .item-title,
+.checked .item-note {
+  color: #7a7d80;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.item-edit-controls {
+  grid-template-columns: minmax(128px, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.item-edit-controls.has-order-controls {
+  grid-template-columns: repeat(2, auto) minmax(128px, 1fr) auto;
+}
+
+.move-item,
+.remove-item {
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+
+.move-item {
+  color: var(--accent);
+}
+
+.move-item:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.remove-item {
+  color: #8a3b2a;
+}
+
+.remove-item:hover {
+  border-color: #8a3b2a;
+  color: #8a3b2a;
+}
+
+.section-select {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  outline-color: var(--accent);
+}
+
+.add-item-form {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+
+.add-item-form.edit-only {
+  display: none;
+}
+
+.is-editing .add-item-form.edit-only {
+  display: grid;
+}
+
+.add-item-form label {
+  display: block;
+  padding: 0;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.add-item-form input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  outline-color: var(--accent);
+}
+
+.compact-form {
+  grid-template-columns: 1fr;
+}
+
+.links-panel {
+  overflow: hidden;
+}
+
+.daily-reading-card {
+  display: block;
+  border: 0;
+  border-top: 1px solid #eee8dc;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.daily-reading-card:hover {
+  background: #fdfbf5;
+}
+
+.daily-reading-content {
+  padding: 22px 22px 20px;
+}
+
+.daily-reading-kicker {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.daily-reading-content h4 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.daily-reading-content p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.rosary-steps {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  list-style: none;
+  color: var(--ink);
+}
+
+.rosary-steps li + li {
+  margin-top: 6px;
+}
+
+.rosary-steps li span {
+  display: block;
+}
+
+.rosary-step-prayer {
+  color: var(--muted);
+}
+
+.rosary-closing {
+  margin-top: 12px;
+}
+
+.rosary-done-button {
+  margin-top: 14px;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.daily-reading-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+textarea {
+  width: 100%;
+  min-height: 180px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  resize: vertical;
+  padding: 14px 16px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  outline-color: var(--accent);
+}
+
+@media (max-width: 820px) {
+  .app {
+    width: min(100% - 22px, 680px);
+    padding-top: 16px;
+  }
+
+  .topbar,
+  .dashboard,
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .date-card {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .checklist-item,
+  .add-item-form {
+    grid-template-columns: 1fr;
+  }
+
+  .item-edit-controls,
+  .item-edit-controls.has-order-controls {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 8px 10px;
+  }
+
+  .move-item,
+  .remove-item,
+  .section-select {
+    width: 100%;
+  }
+
+  .section-select {
+    grid-column: 1 / -1;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -468,6 +510,7 @@
         <h1>Plano de Vida</h1>
         <p class="subtitle">Oracao, trabalho bem feito, vida familiar, formacao crista e apostolado de amizade.</p>
       </div>
+
       <div class="date-card" aria-live="polite">
         <span>Data corrente</span>
         <strong id="currentDate">--</strong>
@@ -538,7 +581,7 @@
           <article class="daily-reading-card text-only" id="rosaryOfDayCard">
             <div class="daily-reading-content">
               <p class="daily-reading-kicker">Terco do dia</p>
-              <h4 id="rosaryOfDayTitle">Misterios do terco</h4>
+              <h4 id="rosaryOfDayTitle">Mistérios do terço</h4>
               <p id="rosaryOfDayMysteries">Carregando misterios do dia...</p>
               <ol id="rosaryOfDaySteps" class="rosary-steps"></ol>
               <p id="rosaryClosingPrayer" class="rosary-closing"></p>
@@ -614,786 +657,849 @@
   </div>
 
   <script>
-    const planItems = {
-      daily: [
-        { id: "oferecimento-dia", title: "Oferecimento do dia ao acordar" },
-        { id: "missa", title: "Santa Missa, quando possivel" },
-        { id: "oracao-mental-manha", title: "Oracao mental pela manha" },
-        { id: "evangelho", title: "Leitura do Evangelho ou Novo Testamento" },
-        { id: "leitura-espiritual", title: "Leitura espiritual" },
-        { id: "angelus", title: "Angelus ou Regina Caeli" },
-        { id: "oracao-mental-tarde", title: "Oracao mental a tarde ou a noite" },
-        { id: "terco", title: "Reza do Terco" },
-        { id: "exame", title: "Exame de consciencia a noite" }
-      ],
-      weekly: [
-        { id: "confissao", title: "Confissao frequente" },
-        { id: "conversa-fraterna", title: "Conversa fraterna" },
-        { id: "circulo", title: "Circulo ou meio de formacao" },
-        { id: "santissimo", title: "Visita ao Santissimo Sacramento" },
-        { id: "apostolado", title: "Apostolado de amizade" }
-      ],
-      monthly: [
-        { id: "recolecao", title: "Recolecao mensal" },
-        { id: "revisao-plano", title: "Revisao do plano de vida" },
-      ],
-      yearly: [
-        { id: "retiro", title: "Retiro espiritual anual" },
-        { id: "curso-anual", title: "Curso anual ou dias de formacao" }
+const planItems = {
+  daily: [
+    {
+      id: "oferecimento-dia",
+      title: "Oferecimento do dia ao acordar"
+    },
+    {
+      id: "missa",
+      title: "Santa Missa, quando possível"
+    },
+    {
+      id: "oracao-mental-manha",
+      title: "Oração mental pela manhã"
+    },
+    {
+      id: "evangelho",
+      title: "Leitura do Evangelho ou Novo Testamento"
+    },
+    {
+      id: "leitura-espiritual",
+      title: "Leitura espiritual"
+    },
+    {
+      id: "angelus",
+      title: "Angelus ou Regina Caeli"
+    },
+    {
+      id: "oracao-mental-tarde",
+      title: "Oração mental à tarde ou à noite"
+    },
+    {
+      id: "terco",
+      title: "Reza do Terço"
+    },
+    {
+      id: "exame",
+      title: "Exame de consciência à noite"
+    }
+  ],
+  weekly: [
+    {
+      id: "confissao",
+      title: "Confissão frequente"
+    },
+    {
+      id: "conversa-fraterna",
+      title: "Conversa fraterna"
+    },
+    {
+      id: "circulo",
+      title: "Círculo ou meio de formação"
+    },
+    {
+      id: "santissimo",
+      title: "Visita ao Santíssimo Sacramento"
+    },
+    {
+      id: "apostolado",
+      title: "Apostolado de amizade"
+    }
+  ],
+  monthly: [
+    {
+      id: "recolecao",
+      title: "Recoleção mensal"
+    },
+    {
+      id: "revisao-plano",
+      title: "Revisão do plano de vida"
+    }
+  ],
+  yearly: [
+    {
+      id: "retiro",
+      title: "Retiro espiritual anual"
+    },
+    {
+      id: "curso-anual",
+      title: "Curso anual ou dias de formação"
+    }
+  ]
+};
+
+window.planItems = planItems;
+
+
+const today = new Date();
+const dayKey = today.toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+const weekDayCode = today.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Sao_Paulo" });
+const weekDayIndexMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+const weekDayIndex = weekDayIndexMap[weekDayCode] ?? 0;
+const weekStartKey = getWeekStartKey(dayKey, weekDayIndex);
+const monthKey = dayKey.slice(0, 7);
+const yearKey = dayKey.slice(0, 4);
+const legacyStorageKey = `plano-de-vida:${dayKey}`;
+const notesKey = `plano-de-vida-notas:${dayKey}`;
+const planConfigKey = "plano-de-vida-config";
+const oldCustomItemsKey = "plano-de-vida-custom-items";
+const oldRemovedItemsKey = "plano-de-vida-removed-items";
+const oldDailyOrderKey = "plano-de-vida-daily-order";
+
+const stateKeys = {
+  daily: `plano-de-vida:daily:${dayKey}`,
+  weekly: `plano-de-vida:weekly:${weekStartKey}`,
+  monthly: `plano-de-vida:monthly:${monthKey}`,
+  yearly: `plano-de-vida:yearly:${yearKey}`
+};
+
+const sectionLabels = {
+  daily: "Diariamente",
+  weekly: "Semanalmente",
+  monthly: "Mensalmente",
+  yearly: "Anualmente"
+};
+
+const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+  weekday: "long",
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+  timeZone: "America/Sao_Paulo"
+});
+
+const shortDateFormatter = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  timeZone: "America/Sao_Paulo"
+});
+
+const lists = {
+  daily: document.querySelector("#dailyList"),
+  weekly: document.querySelector("#weeklyList"),
+  monthly: document.querySelector("#monthlyList"),
+  yearly: document.querySelector("#yearlyList")
+};
+
+const currentDate = document.querySelector("#currentDate");
+const tomorrowGospelLink = document.querySelector("#tomorrowGospelLink");
+const tomorrowGospelDate = document.querySelector("#tomorrowGospelDate");
+const dailyMeditationLink = document.querySelector("#dailyMeditationLink");
+const dailyMeditationTitle = document.querySelector("#dailyMeditationTitle");
+const rosaryOfDayTitle = document.querySelector("#rosaryOfDayTitle");
+const rosaryOfDayMysteries = document.querySelector("#rosaryOfDayMysteries");
+const rosaryOfDaySteps = document.querySelector("#rosaryOfDaySteps");
+const rosaryClosingPrayer = document.querySelector("#rosaryClosingPrayer");
+const markRosaryDone = document.querySelector("#markRosaryDone");
+const notes = document.querySelector("#notes");
+const doneCount = document.querySelector("#doneCount");
+const totalCount = document.querySelector("#totalCount");
+const percentCount = document.querySelector("#percentCount");
+const dailyCount = document.querySelector("#dailyCount");
+const clearDay = document.querySelector("#clearDay");
+const editPlan = document.querySelector("#editPlan");
+const restoreDefaults = document.querySelector("#restoreDefaults");
+const addItemForms = Array.from(document.querySelectorAll("[data-add-section]"));
+
+const defaultItems = Object.entries(planItems).flatMap(([section, items]) =>
+  items.map((item) => ({ ...item, defaultSection: section }))
+);
+const defaultItemIds = defaultItems.map((item) => item.id);
+const defaultItemsById = Object.fromEntries(defaultItems.map((item) => [item.id, item]));
+
+let planConfig = loadPlanConfig();
+const savedBySection = loadSavedStatesBySection();
+let isEditing = false;
+let pendingSectionChanges = {};
+
+function getWeekStartKey(dateKey, weekdayIndex) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const weekStart = new Date(Date.UTC(year, month - 1, day - weekdayIndex));
+  const weekYear = weekStart.getUTCFullYear();
+  const weekMonth = String(weekStart.getUTCMonth() + 1).padStart(2, "0");
+  const weekDay = String(weekStart.getUTCDate()).padStart(2, "0");
+  return `${weekYear}-${weekMonth}-${weekDay}`;
+}
+
+function getTomorrowKey(dateKey) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const tomorrow = new Date(Date.UTC(year, month - 1, day + 1));
+  const nextYear = tomorrow.getUTCFullYear();
+  const nextMonth = String(tomorrow.getUTCMonth() + 1).padStart(2, "0");
+  const nextDay = String(tomorrow.getUTCDate()).padStart(2, "0");
+  return `${nextYear}-${nextMonth}-${nextDay}`;
+}
+
+function stripQuotes(text) {
+  return text.replace(/^["']+|["']+$/g, "").trim();
+}
+
+function normalizeWhitespace(text) {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+function parseMeditationFromHtml(htmlText) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlText, "text/html");
+  const titleNode = doc.querySelector("h1");
+  const title = stripQuotes(normalizeWhitespace(titleNode?.textContent || ""));
+
+  if (!title) {
+    return null;
+  }
+
+  return {
+    title: `"${title}"`
+  };
+}
+
+function parseMeditationFromPlainText(text) {
+  const titleMatch = text.match(/#\s+["']?(.+?)["']?\s*(?:\r?\n|$)/);
+
+  if (!titleMatch) {
+    return null;
+  }
+
+  return {
+    title: `"${stripQuotes(normalizeWhitespace(titleMatch[1]))}"`
+  };
+}
+
+function loadRosaryOfDay() {
+  if (!rosaryOfDayTitle || !rosaryOfDayMysteries || !rosaryOfDaySteps || !rosaryClosingPrayer) {
+    return;
+  }
+
+  const weekdayCode = today.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Sao_Paulo" });
+  const rosaryByWeekday = {
+    Mon: {
+      title: "Mistérios Gozosos",
+      mysteries: [
+        "Anunciação do anjo a Maria.",
+        "Visitação de Maria a Santa Isabel.",
+        "Nascimento de Jesus em Belém.",
+        "Apresentação de Jesus no Templo.",
+        "Perda e encontro do Menino Jesus no Templo."
       ]
-    };
+    },
+    Tue: {
+      title: "Mistérios Dolorosos",
+      mysteries: [
+        "Agonia de Jesus no Horto.",
+        "Flagelação de Jesus.",
+        "Coroação de espinhos.",
+        "Jesus carrega a cruz para o Calvário.",
+        "Crucifixão e morte de Jesus."
+      ]
+    },
+    Wed: {
+      title: "Mistérios Gloriosos",
+      mysteries: [
+        "Ressurreição de Jesus.",
+        "Ascensão de Jesus ao Céu.",
+        "Vinda do Espírito Santo.",
+        "Assunção de Nossa Senhora.",
+        "Coroação de Maria como Rainha do Céu e da Terra."
+      ]
+    },
+    Thu: {
+      title: "Mistérios Luminosos",
+      mysteries: [
+        "Batismo de Jesus no Jordão.",
+        "Autorrevelação de Jesus nas Bodas de Caná.",
+        "Anúncio do Reino e convite à conversão.",
+        "Transfiguração de Jesus.",
+        "Instituição da Eucaristia."
+      ]
+    },
+    Fri: {
+      title: "Mistérios Dolorosos",
+      mysteries: [
+        "Agonia de Jesus no Horto.",
+        "Flagelação de Jesus.",
+        "Coroação de espinhos.",
+        "Jesus carrega a cruz para o Calvário.",
+        "Crucifixão e morte de Jesus."
+      ]
+    },
+    Sat: {
+      title: "Mistérios Gozosos",
+      mysteries: [
+        "Anunciação do anjo a Maria.",
+        "Visitação de Maria a Santa Isabel.",
+        "Nascimento de Jesus em Belém.",
+        "Apresentação de Jesus no Templo.",
+        "Perda e encontro do Menino Jesus no Templo."
+      ]
+    },
+    Sun: {
+      title: "Mistérios Gloriosos",
+      mysteries: [
+        "Ressurreição de Jesus.",
+        "Ascensão de Jesus ao Céu.",
+        "Vinda do Espírito Santo.",
+        "Assunção de Nossa Senhora.",
+        "Coroação de Maria como Rainha do Céu e da Terra."
+      ]
+    }
+  };
 
-    const today = new Date();
-    const dayKey = today.toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
-    const weekDayCode = today.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Sao_Paulo" });
-    const weekDayIndexMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-    const weekDayIndex = weekDayIndexMap[weekDayCode] ?? 0;
-    const weekStartKey = getWeekStartKey(dayKey, weekDayIndex);
-    const monthKey = dayKey.slice(0, 7);
-    const yearKey = dayKey.slice(0, 4);
-    const legacyStorageKey = `plano-de-vida:${dayKey}`;
-    const notesKey = `plano-de-vida-notas:${dayKey}`;
-    const planConfigKey = "plano-de-vida-config";
-    const oldCustomItemsKey = "plano-de-vida-custom-items";
-    const oldRemovedItemsKey = "plano-de-vida-removed-items";
-    const oldDailyOrderKey = "plano-de-vida-daily-order";
-    const stateKeys = {
-      daily: `plano-de-vida:daily:${dayKey}`,
-      weekly: `plano-de-vida:weekly:${weekStartKey}`,
-      monthly: `plano-de-vida:monthly:${monthKey}`,
-      yearly: `plano-de-vida:yearly:${yearKey}`
-    };
+  const rosary = rosaryByWeekday[weekdayCode] || rosaryByWeekday.Mon;
+  rosaryOfDayTitle.textContent = rosary.title;
+  rosaryOfDayMysteries.textContent = "Oração inicial: Oferecimento, Credo, Pai-Nosso, 3 Ave-Marias e Glória.";
+  rosaryOfDaySteps.replaceChildren(
+    ...rosary.mysteries.map((mystery, index) => {
+      const item = document.createElement("li");
+      const mysteryLine = document.createElement("span");
+      const prayerLine = document.createElement("span");
+      mysteryLine.textContent = `${index + 1}º mistério: ${mystery}`;
+      prayerLine.textContent = "Pai-Nosso, 10 Ave-Marias e Glória.";
+      prayerLine.className = "rosary-step-prayer";
+      item.append(mysteryLine, prayerLine);
+      return item;
+    })
+  );
+  rosaryClosingPrayer.textContent = "Oração final: Salve Rainha.";
+}
 
-    const sectionLabels = {
-      daily: "Diariamente",
-      weekly: "Semanalmente",
-      monthly: "Mensalmente",
-      yearly: "Anualmente"
-    };
+function markRosaryAsDone() {
+  const rosaryCheckbox = document.querySelector("input[type='checkbox'][data-id='terco']");
+  if (!rosaryCheckbox) {
+    return;
+  }
 
-    const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
-      weekday: "long",
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-      timeZone: "America/Sao_Paulo"
+  const section = rosaryCheckbox.dataset.section || "daily";
+  rosaryCheckbox.checked = true;
+  rosaryCheckbox.closest("li")?.classList.add("checked");
+  saveSectionState(section);
+  updateSummary();
+}
+
+async function fetchTextWithFallback(url) {
+  const directResponse = await fetch(url);
+
+  if (!directResponse.ok) {
+    throw new Error(`Failed direct fetch: ${directResponse.status}`);
+  }
+
+  return directResponse.text();
+}
+
+async function loadDailyMeditation() {
+  if (!dailyMeditationLink || !dailyMeditationTitle) {
+    return;
+  }
+
+  const url = "https://opusdei.org/pt-br/dailytext/";
+  dailyMeditationLink.href = url;
+
+  try {
+    const htmlText = await fetchTextWithFallback(url);
+    const parsed = parseMeditationFromHtml(htmlText);
+
+    if (parsed) {
+      dailyMeditationTitle.textContent = parsed.title;
+      return;
+    }
+  } catch (error) {
+  }
+
+  try {
+    const mirrorUrl = `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`;
+    const mirrorResponse = await fetch(mirrorUrl);
+
+    if (!mirrorResponse.ok) {
+      throw new Error(`Failed mirror fetch: ${mirrorResponse.status}`);
+    }
+
+    const mirrorText = await mirrorResponse.text();
+    const parsed = parseMeditationFromPlainText(mirrorText);
+
+    if (parsed) {
+      dailyMeditationTitle.textContent = parsed.title;
+    }
+  } catch (error) {
+  }
+}
+
+function createInitialOrder() {
+  return {
+    daily: planItems.daily.map((item) => item.id),
+    weekly: planItems.weekly.map((item) => item.id),
+    monthly: planItems.monthly.map((item) => item.id),
+    yearly: planItems.yearly.map((item) => item.id)
+  };
+}
+
+function normalizeSection(section) {
+  if (section === "periodic") {
+    return "monthly";
+  }
+
+  return Object.prototype.hasOwnProperty.call(sectionLabels, section) ? section : "daily";
+}
+
+function getResolvedSectionById(itemId, config) {
+  const customItem = config.custom.find((item) => item.id === itemId);
+
+  if (customItem) {
+    return normalizeSection(customItem.section);
+  }
+
+  if (config.sections[itemId]) {
+    return normalizeSection(config.sections[itemId]);
+  }
+
+  return defaultItemsById[itemId]?.defaultSection || "daily";
+}
+
+function normalizeOrder(order, config) {
+  const normalized = createInitialOrder();
+
+  Object.entries(order || {}).forEach(([rawSection, ids]) => {
+    if (!Array.isArray(ids)) {
+      return;
+    }
+
+    const section = normalizeSection(rawSection);
+
+    ids.forEach((id) => {
+      const targetSection = rawSection === "periodic" ? getResolvedSectionById(id, config) : section;
+
+      if (!normalized[targetSection].includes(id)) {
+        normalized[targetSection].push(id);
+      }
     });
+  });
 
-    const shortDateFormatter = new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "America/Sao_Paulo"
+  return normalized;
+}
+
+function loadSavedStatesBySection() {
+  const loaded = Object.fromEntries(
+    Object.entries(stateKeys).map(([section, key]) => [section, JSON.parse(localStorage.getItem(key) || "{}")])
+  );
+
+  const hasAnySectionState = Object.values(loaded).some((state) => Object.keys(state).length > 0);
+  const legacyState = JSON.parse(localStorage.getItem(legacyStorageKey) || "null");
+
+  if (!hasAnySectionState && legacyState) {
+    Object.entries(legacyState).forEach(([itemId, checked]) => {
+      if (!checked) {
+        return;
+      }
+
+      const section = getResolvedSectionById(itemId, planConfig);
+      loaded[section][itemId] = true;
     });
+    Object.entries(stateKeys).forEach(([section, key]) => {
+      localStorage.setItem(key, JSON.stringify(loaded[section]));
+    });
+  }
 
-    const lists = {
-      daily: document.querySelector("#dailyList"),
-      weekly: document.querySelector("#weeklyList"),
-      monthly: document.querySelector("#monthlyList"),
-      yearly: document.querySelector("#yearlyList")
+  return loaded;
+}
+
+function loadPlanConfig() {
+  const stored = JSON.parse(localStorage.getItem(planConfigKey) || "null");
+
+  if (stored) {
+    const baseConfig = {
+      removed: stored.removed || [],
+      custom: (stored.custom || []).map((item) => ({ ...item, section: normalizeSection(item.section || "daily") })),
+      sections: Object.fromEntries(
+        Object.entries(stored.sections || {}).map(([id, section]) => [id, normalizeSection(section)])
+      )
     };
 
-    const currentDate = document.querySelector("#currentDate");
-    const tomorrowGospelLink = document.querySelector("#tomorrowGospelLink");
-    const tomorrowGospelDate = document.querySelector("#tomorrowGospelDate");
-    const dailyMeditationLink = document.querySelector("#dailyMeditationLink");
-    const dailyMeditationTitle = document.querySelector("#dailyMeditationTitle");
-    const rosaryOfDayTitle = document.querySelector("#rosaryOfDayTitle");
-    const rosaryOfDayMysteries = document.querySelector("#rosaryOfDayMysteries");
-    const rosaryOfDaySteps = document.querySelector("#rosaryOfDaySteps");
-    const rosaryClosingPrayer = document.querySelector("#rosaryClosingPrayer");
-    const markRosaryDone = document.querySelector("#markRosaryDone");
-    const notes = document.querySelector("#notes");
-    const doneCount = document.querySelector("#doneCount");
-    const totalCount = document.querySelector("#totalCount");
-    const percentCount = document.querySelector("#percentCount");
-    const dailyCount = document.querySelector("#dailyCount");
-    const clearDay = document.querySelector("#clearDay");
-    const editPlan = document.querySelector("#editPlan");
-    const restoreDefaults = document.querySelector("#restoreDefaults");
-    const addItemForms = Array.from(document.querySelectorAll("[data-add-section]"));
+    return {
+      ...baseConfig,
+      order: normalizeOrder(stored.order || {}, baseConfig)
+    };
+  }
 
-    const defaultItems = Object.entries(planItems).flatMap(([section, items]) =>
-      items.map((item) => ({ ...item, defaultSection: section }))
-    );
-    const defaultItemIds = defaultItems.map((item) => item.id);
-    const defaultItemsById = Object.fromEntries(defaultItems.map((item) => [item.id, item]));
+  return migrateOldConfig();
+}
 
-    let planConfig = loadPlanConfig();
-    const savedBySection = loadSavedStatesBySection();
-    let isEditing = false;
-    let pendingSectionChanges = {};
+function migrateOldConfig() {
+  const oldCustom = JSON.parse(localStorage.getItem(oldCustomItemsKey) || "[]");
+  const oldRemoved = JSON.parse(localStorage.getItem(oldRemovedItemsKey) || "[]");
+  const oldDailyOrder = JSON.parse(localStorage.getItem(oldDailyOrderKey) || "[]");
+  const order = createInitialOrder();
 
-    function getWeekStartKey(dateKey, weekdayIndex) {
-      const [year, month, day] = dateKey.split("-").map(Number);
-      const weekStart = new Date(Date.UTC(year, month - 1, day - weekdayIndex));
-      const weekYear = weekStart.getUTCFullYear();
-      const weekMonth = String(weekStart.getUTCMonth() + 1).padStart(2, "0");
-      const weekDay = String(weekStart.getUTCDate()).padStart(2, "0");
-      return `${weekYear}-${weekMonth}-${weekDay}`;
+  if (oldDailyOrder.length) {
+    order.daily = [
+      ...oldDailyOrder.filter((id) => defaultItemIds.includes(id) || oldCustom.some((item) => item.id === id)),
+      ...order.daily.filter((id) => !oldDailyOrder.includes(id))
+    ];
+  }
+
+  const custom = oldCustom.map((item) => ({ ...item, section: normalizeSection(item.section || "daily") }));
+
+  custom.forEach((item) => {
+    const section = item.section;
+    if (!order[section].includes(item.id)) {
+      order[section].push(item.id);
     }
-
-    function getTomorrowKey(dateKey) {
-      const [year, month, day] = dateKey.split("-").map(Number);
-      const tomorrow = new Date(Date.UTC(year, month - 1, day + 1));
-      const nextYear = tomorrow.getUTCFullYear();
-      const nextMonth = String(tomorrow.getUTCMonth() + 1).padStart(2, "0");
-      const nextDay = String(tomorrow.getUTCDate()).padStart(2, "0");
-      return `${nextYear}-${nextMonth}-${nextDay}`;
-    }
-
-    function stripQuotes(text) {
-      return text.replace(/^["']+|["']+$/g, "").trim();
-    }
-
-    function normalizeWhitespace(text) {
-      return text.replace(/\s+/g, " ").trim();
-    }
-
-    function parseMeditationFromHtml(htmlText) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, "text/html");
-      const titleNode = doc.querySelector("h1");
-      const title = stripQuotes(normalizeWhitespace(titleNode?.textContent || ""));
-
-      if (!title) {
-        return null;
-      }
-
-      return { title: `"${title}"` };
-    }
-
-    function parseMeditationFromPlainText(text) {
-      const titleMatch = text.match(/#\s+["']?(.+?)["']?\s*(?:\r?\n|$)/);
-
-      if (!titleMatch) {
-        return null;
-      }
-
-      return { title: `"${stripQuotes(normalizeWhitespace(titleMatch[1]))}"` };
-    }
-
-    function loadRosaryOfDay() {
-      if (!rosaryOfDayTitle || !rosaryOfDayMysteries || !rosaryOfDaySteps || !rosaryClosingPrayer) {
-        return;
-      }
-
-      const weekdayCode = today.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Sao_Paulo" });
-      const rosaryByWeekday = {
-        Mon: {
-          title: "Misterios Gozosos",
-          mysteries: [
-            "Anunciacao do anjo a Maria.",
-            "Visitacao de Maria a Santa Isabel.",
-            "Nascimento de Jesus em Belem.",
-            "Apresentacao de Jesus no Templo.",
-            "Perda e encontro do Menino Jesus no Templo."
-          ]
-        },
-        Tue: {
-          title: "Misterios Dolorosos",
-          mysteries: [
-            "Agonia de Jesus no Horto.",
-            "Flagelacao de Jesus.",
-            "Coroacao de espinhos.",
-            "Jesus carrega a cruz para o Calvario.",
-            "Crucifixao e morte de Jesus."
-          ]
-        },
-        Wed: {
-          title: "Misterios Gloriosos",
-          mysteries: [
-            "Ressurreicao de Jesus.",
-            "Ascensao de Jesus ao Ceu.",
-            "Vinda do Espirito Santo.",
-            "Assuncao de Nossa Senhora.",
-            "Coroacao de Maria como Rainha do Ceu e da Terra."
-          ]
-        },
-        Thu: {
-          title: "Misterios Luminosos",
-          mysteries: [
-            "Batismo de Jesus no Jordao.",
-            "Autorrevelacao de Jesus nas Bodas de Cana.",
-            "Anuncio do Reino e convite a conversao.",
-            "Transfiguracao de Jesus.",
-            "Instituicao da Eucaristia."
-          ]
-        },
-        Fri: {
-          title: "Misterios Dolorosos",
-          mysteries: [
-            "Agonia de Jesus no Horto.",
-            "Flagelacao de Jesus.",
-            "Coroacao de espinhos.",
-            "Jesus carrega a cruz para o Calvario.",
-            "Crucifixao e morte de Jesus."
-          ]
-        },
-        Sat: {
-          title: "Misterios Gozosos",
-          mysteries: [
-            "Anunciacao do anjo a Maria.",
-            "Visitacao de Maria a Santa Isabel.",
-            "Nascimento de Jesus em Belem.",
-            "Apresentacao de Jesus no Templo.",
-            "Perda e encontro do Menino Jesus no Templo."
-          ]
-        },
-        Sun: {
-          title: "Misterios Gloriosos",
-          mysteries: [
-            "Ressurreicao de Jesus.",
-            "Ascensao de Jesus ao Ceu.",
-            "Vinda do Espirito Santo.",
-            "Assuncao de Nossa Senhora.",
-            "Coroacao de Maria como Rainha do Ceu e da Terra."
-          ]
-        }
-      };
-
-      const rosary = rosaryByWeekday[weekdayCode] || rosaryByWeekday.Mon;
-      rosaryOfDayTitle.textContent = rosary.title;
-      rosaryOfDayMysteries.textContent = "Oracao inicial: Oferecimento, Credo, Pai-Nosso, 3 Ave-Marias e Gloria.";
-      rosaryOfDaySteps.replaceChildren(
-        ...rosary.mysteries.map((mystery, index) => {
-          const item = document.createElement("li");
-          const mysteryLine = document.createElement("span");
-          const prayerLine = document.createElement("span");
-          mysteryLine.textContent = `${index + 1}º misterio: ${mystery}`;
-          prayerLine.textContent = "Pai-Nosso, 10 Ave-Marias e Gloria.";
-          prayerLine.className = "rosary-step-prayer";
-          item.append(mysteryLine, prayerLine);
-          return item;
-        })
-      );
-      rosaryClosingPrayer.textContent = "Oracao final: Salve Rainha.";
-    }
-
-    function markRosaryAsDone() {
-      const rosaryCheckbox = document.querySelector("input[type='checkbox'][data-id='terco']");
-      if (!rosaryCheckbox) {
-        return;
-      }
-
-      const section = rosaryCheckbox.dataset.section || "daily";
-      rosaryCheckbox.checked = true;
-      rosaryCheckbox.closest("li")?.classList.add("checked");
-      saveSectionState(section);
-      updateSummary();
-    }
-
-    async function fetchTextWithFallback(url) {
-      const directResponse = await fetch(url);
-
-      if (!directResponse.ok) {
-        throw new Error(`Failed direct fetch: ${directResponse.status}`);
-      }
-
-      return directResponse.text();
-    }
-
-    async function loadDailyMeditation() {
-      if (!dailyMeditationLink || !dailyMeditationTitle) {
-        return;
-      }
-
-      const url = "https://opusdei.org/pt-br/dailytext/";
-      dailyMeditationLink.href = url;
-
-      try {
-        const htmlText = await fetchTextWithFallback(url);
-        const parsed = parseMeditationFromHtml(htmlText);
-
-        if (parsed) {
-          dailyMeditationTitle.textContent = parsed.title;
-          return;
-        }
-      } catch (error) {
-      }
-
-      try {
-        const mirrorUrl = `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`;
-        const mirrorResponse = await fetch(mirrorUrl);
-
-        if (!mirrorResponse.ok) {
-          throw new Error(`Failed mirror fetch: ${mirrorResponse.status}`);
-        }
-
-        const mirrorText = await mirrorResponse.text();
-        const parsed = parseMeditationFromPlainText(mirrorText);
-
-        if (parsed) {
-          dailyMeditationTitle.textContent = parsed.title;
-        }
-      } catch (error) {
-      }
-    }
-
-    function createInitialOrder() {
-      return {
-        daily: planItems.daily.map((item) => item.id),
-        weekly: planItems.weekly.map((item) => item.id),
-        monthly: planItems.monthly.map((item) => item.id),
-        yearly: planItems.yearly.map((item) => item.id)
-      };
-    }
-
-    function normalizeSection(section) {
-      if (section === "periodic") {
-        return "monthly";
-      }
-
-      return Object.prototype.hasOwnProperty.call(sectionLabels, section) ? section : "daily";
-    }
-
-    function getResolvedSectionById(itemId, config) {
-      const customItem = config.custom.find((item) => item.id === itemId);
-
-      if (customItem) {
-        return normalizeSection(customItem.section);
-      }
-
-      if (config.sections[itemId]) {
-        return normalizeSection(config.sections[itemId]);
-      }
-
-      return defaultItemsById[itemId]?.defaultSection || "daily";
-    }
-
-    function normalizeOrder(order, config) {
-      const normalized = createInitialOrder();
-
-      Object.entries(order || {}).forEach(([rawSection, ids]) => {
-        if (!Array.isArray(ids)) {
-          return;
-        }
-
-        const section = normalizeSection(rawSection);
-
-        ids.forEach((id) => {
-          const targetSection = rawSection === "periodic" ? getResolvedSectionById(id, config) : section;
-
-          if (!normalized[targetSection].includes(id)) {
-            normalized[targetSection].push(id);
-          }
-        });
-      });
-
-      return normalized;
-    }
-
-    function loadSavedStatesBySection() {
-      const loaded = Object.fromEntries(
-        Object.entries(stateKeys).map(([section, key]) => [section, JSON.parse(localStorage.getItem(key) || "{}")])
-      );
-
-      const hasAnySectionState = Object.values(loaded).some((state) => Object.keys(state).length > 0);
-      const legacyState = JSON.parse(localStorage.getItem(legacyStorageKey) || "null");
-
-      if (!hasAnySectionState && legacyState) {
-        Object.entries(legacyState).forEach(([itemId, checked]) => {
-          if (!checked) {
-            return;
-          }
-
-          const section = getResolvedSectionById(itemId, planConfig);
-          loaded[section][itemId] = true;
-        });
-        Object.entries(stateKeys).forEach(([section, key]) => {
-          localStorage.setItem(key, JSON.stringify(loaded[section]));
-        });
-      }
-
-      return loaded;
-    }
-
-    function loadPlanConfig() {
-      const stored = JSON.parse(localStorage.getItem(planConfigKey) || "null");
-
-      if (stored) {
-        const baseConfig = {
-          removed: stored.removed || [],
-          custom: (stored.custom || []).map((item) => ({ ...item, section: normalizeSection(item.section || "daily") })),
-          sections: Object.fromEntries(
-            Object.entries(stored.sections || {}).map(([id, section]) => [id, normalizeSection(section)])
-          )
-        };
-
-        return {
-          ...baseConfig,
-          order: normalizeOrder(stored.order || {}, baseConfig)
-        };
-      }
-
-      return migrateOldConfig();
-    }
-
-    function migrateOldConfig() {
-      const oldCustom = JSON.parse(localStorage.getItem(oldCustomItemsKey) || "[]");
-      const oldRemoved = JSON.parse(localStorage.getItem(oldRemovedItemsKey) || "[]");
-      const oldDailyOrder = JSON.parse(localStorage.getItem(oldDailyOrderKey) || "[]");
-      const order = createInitialOrder();
-
-      if (oldDailyOrder.length) {
-        order.daily = [
-          ...oldDailyOrder.filter((id) => defaultItemIds.includes(id) || oldCustom.some((item) => item.id === id)),
-          ...order.daily.filter((id) => !oldDailyOrder.includes(id))
-        ];
-      }
-
-      const custom = oldCustom.map((item) => ({ ...item, section: normalizeSection(item.section || "daily") }));
-
-      custom.forEach((item) => {
-        const section = item.section;
-        if (!order[section].includes(item.id)) {
-          order[section].push(item.id);
-        }
-      });
-
-      const migrated = {
-        removed: oldRemoved,
-        custom,
-        sections: {},
-        order
-      };
-
-      localStorage.setItem(planConfigKey, JSON.stringify(migrated));
-      return migrated;
-    }
-
-    function savePlanConfig() {
-      localStorage.setItem(planConfigKey, JSON.stringify(planConfig));
-    }
-
-    function getItemSection(item) {
-      return item.custom ? item.section : planConfig.sections[item.id] || item.defaultSection;
-    }
-
-    function getAllItems() {
-      return [
-        ...defaultItems.filter((item) => !planConfig.removed.includes(item.id)),
-        ...planConfig.custom
-      ];
-    }
-
-    function getVisibleItems(section) {
-      const items = getAllItems().filter((item) => getItemSection(item) === section);
-      const knownIds = items.map((item) => item.id);
-      const order = planConfig.order[section] || [];
-      const orderedIds = [
-        ...order.filter((id) => knownIds.includes(id)),
-        ...knownIds.filter((id) => !order.includes(id))
-      ];
-
-      planConfig.order[section] = orderedIds;
-      return orderedIds.map((id) => items.find((item) => item.id === id));
-    }
-
-    function createChecklistItem(item, section, index, total) {
-      const row = document.createElement("li");
-      const itemShell = document.createElement("div");
-      const label = document.createElement("label");
-      const checkbox = document.createElement("input");
-      const content = document.createElement("span");
-      const title = document.createElement("span");
-      const note = document.createElement("span");
-      const editControls = document.createElement("div");
-      const moveUpButton = document.createElement("button");
-      const moveDownButton = document.createElement("button");
-      const sectionSelect = document.createElement("select");
-      const removeButton = document.createElement("button");
-
-      checkbox.type = "checkbox";
-      checkbox.dataset.id = item.id;
-      checkbox.dataset.section = section;
-      checkbox.checked = Boolean(savedBySection[section]?.[item.id]);
-
-      itemShell.className = "checklist-item";
-
-      title.className = "item-title";
-      title.textContent = item.title;
-
-      note.className = "item-note";
-      note.textContent = item.note || "";
-
-      editControls.className = section === "daily"
-        ? "item-edit-controls has-order-controls edit-only"
-        : "item-edit-controls edit-only";
-
-      moveUpButton.type = "button";
-      moveUpButton.className = "move-item";
-      moveUpButton.textContent = "Subir";
-      moveUpButton.disabled = index === 0;
-      moveUpButton.addEventListener("click", () => moveItemWithinSection(section, item.id, -1));
-
-      moveDownButton.type = "button";
-      moveDownButton.className = "move-item";
-      moveDownButton.textContent = "Descer";
-      moveDownButton.disabled = index === total - 1;
-      moveDownButton.addEventListener("click", () => moveItemWithinSection(section, item.id, 1));
-
-      Object.entries(sectionLabels).forEach(([value, labelText]) => {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = labelText;
-        option.selected = value === section;
-        sectionSelect.append(option);
-      });
-
-      sectionSelect.className = "section-select";
-      sectionSelect.setAttribute("aria-label", `Categoria de ${item.title}`);
-      sectionSelect.addEventListener("change", () => {
-        pendingSectionChanges[item.id] = sectionSelect.value;
-      });
-
-      removeButton.type = "button";
-      removeButton.className = "remove-item";
-      removeButton.textContent = "Remover";
-      removeButton.addEventListener("click", () => removeItem(item));
-
-      content.append(title);
-      if (item.note) {
-        content.append(note);
-      }
-      label.append(checkbox, content);
-
-      if (section === "daily") {
-        editControls.append(moveUpButton, moveDownButton);
-      }
-
-      editControls.append(sectionSelect, removeButton);
-      itemShell.append(label, editControls);
-      row.append(itemShell);
-      row.classList.toggle("checked", checkbox.checked);
-
-      checkbox.addEventListener("change", () => {
-        row.classList.toggle("checked", checkbox.checked);
-        saveSectionState(section);
-        updateSummary();
-      });
-
-      return row;
-    }
-
-    function renderPlan() {
-      Object.keys(lists).forEach((section) => {
-        const items = getVisibleItems(section);
-        lists[section].replaceChildren(...items.map((item, index) => createChecklistItem(item, section, index, items.length)));
-      });
-      savePlanConfig();
-    }
-
-    function getCheckboxes() {
-      return Array.from(document.querySelectorAll("input[type='checkbox']"));
-    }
-
-    function saveSectionState(section) {
-      const state = {};
-      Array.from(lists[section].querySelectorAll("input[type='checkbox']")).forEach((checkbox) => {
-        state[checkbox.dataset.id] = checkbox.checked;
-      });
-      savedBySection[section] = state;
-      localStorage.setItem(stateKeys[section], JSON.stringify(state));
-    }
-
-    function saveAllSectionStates() {
-      Object.keys(lists).forEach((section) => saveSectionState(section));
-    }
-
-    function updateSummary() {
-      const dailyBoxes = Array.from(lists.daily.querySelectorAll("input[type='checkbox']"));
-      const dailyDone = dailyBoxes.filter((checkbox) => checkbox.checked).length;
-      const percent = dailyBoxes.length ? Math.round((dailyDone / dailyBoxes.length) * 100) : 0;
-
-      doneCount.textContent = String(dailyDone);
-      totalCount.textContent = String(dailyBoxes.length);
-      percentCount.textContent = `${percent}%`;
-      dailyCount.textContent = `${dailyDone}/${dailyBoxes.length}`;
-    }
-
-    function clearToday() {
-      getCheckboxes().forEach((checkbox) => {
-        checkbox.checked = false;
-        checkbox.closest("li").classList.remove("checked");
-      });
-
-      notes.value = "";
-      Object.entries(stateKeys).forEach(([section, key]) => {
-        savedBySection[section] = {};
-        localStorage.removeItem(key);
-      });
-      localStorage.removeItem(notesKey);
-      updateSummary();
-    }
-
-    function removeFromOrders(itemId) {
-      Object.keys(planConfig.order).forEach((section) => {
-        planConfig.order[section] = planConfig.order[section].filter((id) => id !== itemId);
-      });
-    }
-
-    function removeItem(item) {
-      if (item.custom) {
-        planConfig.custom = planConfig.custom.filter((customItem) => customItem.id !== item.id);
-      } else if (!planConfig.removed.includes(item.id)) {
-        planConfig.removed = [...planConfig.removed, item.id];
-        delete planConfig.sections[item.id];
-      }
-
-      removeFromOrders(item.id);
-      Object.keys(savedBySection).forEach((section) => {
-        delete savedBySection[section][item.id];
-      });
-      renderPlan();
-      saveAllSectionStates();
-      updateSummary();
-    }
-
-    function moveItemWithinSection(section, itemId, direction) {
-      const currentOrder = getVisibleItems(section).map((item) => item.id);
-      const fromIndex = currentOrder.indexOf(itemId);
-      const toIndex = fromIndex + direction;
-
-      if (fromIndex < 0 || toIndex < 0 || toIndex >= currentOrder.length) {
-        return;
-      }
-
-      const nextOrder = [...currentOrder];
-      const [movedItem] = nextOrder.splice(fromIndex, 1);
-      nextOrder.splice(toIndex, 0, movedItem);
-      planConfig.order[section] = nextOrder;
-      renderPlan();
-      updateSummary();
-    }
-
-    function moveItemToSection(item, targetSection) {
-      const currentSection = getItemSection(item);
-
-      if (currentSection === targetSection) {
-        return;
-      }
-
-      if (item.custom) {
-        planConfig.custom = planConfig.custom.map((customItem) =>
-          customItem.id === item.id ? { ...customItem, section: targetSection } : customItem
-        );
-      } else {
-        planConfig.sections[item.id] = targetSection;
-      }
-
-      removeFromOrders(item.id);
-      planConfig.order[targetSection] = [...(planConfig.order[targetSection] || []), item.id];
-      const checked = Boolean(savedBySection[currentSection] && savedBySection[currentSection][item.id]);
-      if (savedBySection[currentSection]) {
-        delete savedBySection[currentSection][item.id];
-      }
-      if (checked) {
-        savedBySection[targetSection][item.id] = true;
-      }
-      saveSectionState(currentSection);
-      saveSectionState(targetSection);
-      renderPlan();
-      updateSummary();
-    }
-
-    function applyPendingSectionChanges() {
-      Object.entries(pendingSectionChanges).forEach(([itemId, targetSection]) => {
-        const item = getAllItems().find((candidate) => candidate.id === itemId);
-
-        if (!item || getItemSection(item) === targetSection) {
-          return;
-        }
-
-        moveItemToSection(item, targetSection);
-      });
-
-      pendingSectionChanges = {};
-    }
-
-    function addCustomItem(event) {
-      event.preventDefault();
-
-      const form = event.currentTarget;
-      const section = form.dataset.addSection;
-      const formData = new FormData(form);
-      const title = String(formData.get("title") || "").trim();
-      const note = String(formData.get("note") || "").trim();
-
-      if (!title) {
-        return;
-      }
-
-      const id = `custom-${Date.now()}`;
-
-      planConfig.custom = [
-        ...planConfig.custom,
-        {
-          id,
-          section,
-          title,
-          note,
-          custom: true
-        }
-      ];
-      planConfig.order[section] = [...(planConfig.order[section] || []), id];
-
-      form.reset();
-      renderPlan();
-      updateSummary();
-    }
-
-    function restoreDefaultItems() {
-      planConfig.removed = [];
-      planConfig.sections = {};
-      planConfig.order = createInitialOrder();
-
-      planConfig.custom.forEach((item) => {
-        if (!planConfig.order[item.section].includes(item.id)) {
-          planConfig.order[item.section].push(item.id);
-        }
-      });
-
-      renderPlan();
-      updateSummary();
-    }
-
-    function toggleEditMode() {
-      if (isEditing) {
-        applyPendingSectionChanges();
-      } else {
-        pendingSectionChanges = {};
-      }
-
-      isEditing = !isEditing;
-      document.body.classList.toggle("is-editing", isEditing);
-      editPlan.textContent = isEditing ? "Concluir edicao" : "Editar";
-      editPlan.setAttribute("aria-pressed", String(isEditing));
-    }
-
-    currentDate.textContent = dateFormatter.format(today);
-
-    if (tomorrowGospelLink && tomorrowGospelDate) {
-      const tomorrowKey = getTomorrowKey(dayKey);
-      const tomorrowDate = new Date(`${tomorrowKey}T12:00:00`);
-      tomorrowGospelLink.href = `https://evangelhoquotidiano.org/PT/gospel/${tomorrowKey}`;
-      tomorrowGospelDate.textContent = `Leitura de ${shortDateFormatter.format(tomorrowDate)}.`;
-    }
-
-    loadDailyMeditation();
-    loadRosaryOfDay();
-    notes.value = localStorage.getItem(notesKey) || "";
-    notes.addEventListener("input", () => localStorage.setItem(notesKey, notes.value));
-    clearDay.addEventListener("click", clearToday);
-    editPlan.addEventListener("click", toggleEditMode);
-    restoreDefaults.addEventListener("click", restoreDefaultItems);
-    addItemForms.forEach((form) => form.addEventListener("submit", addCustomItem));
-    if (markRosaryDone) {
-      markRosaryDone.addEventListener("click", markRosaryAsDone);
-    }
-
-    renderPlan();
+  });
+
+  const migrated = {
+    removed: oldRemoved,
+    custom,
+    sections: {},
+    order
+  };
+
+  localStorage.setItem(planConfigKey, JSON.stringify(migrated));
+  return migrated;
+}
+
+function savePlanConfig() {
+  localStorage.setItem(planConfigKey, JSON.stringify(planConfig));
+}
+
+function getItemSection(item) {
+  return item.custom ? item.section : planConfig.sections[item.id] || item.defaultSection;
+}
+
+function getAllItems() {
+  return [
+    ...defaultItems.filter((item) => !planConfig.removed.includes(item.id)),
+    ...planConfig.custom
+  ];
+}
+
+function getVisibleItems(section) {
+  const items = getAllItems().filter((item) => getItemSection(item) === section);
+  const knownIds = items.map((item) => item.id);
+  const order = planConfig.order[section] || [];
+  const orderedIds = [
+    ...order.filter((id) => knownIds.includes(id)),
+    ...knownIds.filter((id) => !order.includes(id))
+  ];
+
+  planConfig.order[section] = orderedIds;
+  return orderedIds.map((id) => items.find((item) => item.id === id));
+}
+
+function createChecklistItem(item, section, index, total) {
+  const row = document.createElement("li");
+  const itemShell = document.createElement("div");
+  const label = document.createElement("label");
+  const checkbox = document.createElement("input");
+  const content = document.createElement("span");
+  const title = document.createElement("span");
+  const note = document.createElement("span");
+  const editControls = document.createElement("div");
+  const moveUpButton = document.createElement("button");
+  const moveDownButton = document.createElement("button");
+  const sectionSelect = document.createElement("select");
+  const removeButton = document.createElement("button");
+
+  checkbox.type = "checkbox";
+  checkbox.dataset.id = item.id;
+  checkbox.dataset.section = section;
+  checkbox.checked = Boolean(savedBySection[section]?.[item.id]);
+
+  itemShell.className = "checklist-item";
+
+  title.className = "item-title";
+  title.textContent = item.title;
+
+  note.className = "item-note";
+  note.textContent = item.note || "";
+
+  editControls.className = section === "daily"
+    ? "item-edit-controls has-order-controls edit-only"
+    : "item-edit-controls edit-only";
+
+  moveUpButton.type = "button";
+  moveUpButton.className = "move-item";
+  moveUpButton.textContent = "Subir";
+  moveUpButton.disabled = index === 0;
+  moveUpButton.addEventListener("click", () => moveItemWithinSection(section, item.id, -1));
+
+  moveDownButton.type = "button";
+  moveDownButton.className = "move-item";
+  moveDownButton.textContent = "Descer";
+  moveDownButton.disabled = index === total - 1;
+  moveDownButton.addEventListener("click", () => moveItemWithinSection(section, item.id, 1));
+
+  Object.entries(sectionLabels).forEach(([value, labelText]) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = labelText;
+    option.selected = value === section;
+    sectionSelect.append(option);
+  });
+
+  sectionSelect.className = "section-select";
+  sectionSelect.setAttribute("aria-label", `Categoria de ${item.title}`);
+  sectionSelect.addEventListener("change", () => {
+    pendingSectionChanges[item.id] = sectionSelect.value;
+  });
+
+  removeButton.type = "button";
+  removeButton.className = "remove-item";
+  removeButton.textContent = "Remover";
+  removeButton.addEventListener("click", () => removeItem(item));
+
+  content.append(title);
+  if (item.note) {
+    content.append(note);
+  }
+  label.append(checkbox, content);
+
+  if (section === "daily") {
+    editControls.append(moveUpButton, moveDownButton);
+  }
+
+  editControls.append(sectionSelect, removeButton);
+  itemShell.append(label, editControls);
+  row.append(itemShell);
+  row.classList.toggle("checked", checkbox.checked);
+
+  checkbox.addEventListener("change", () => {
+    row.classList.toggle("checked", checkbox.checked);
+    saveSectionState(section);
     updateSummary();
+  });
+
+  return row;
+}
+
+function renderPlan() {
+  Object.keys(lists).forEach((section) => {
+    const items = getVisibleItems(section);
+    lists[section].replaceChildren(...items.map((item, index) => createChecklistItem(item, section, index, items.length)));
+  });
+  savePlanConfig();
+}
+
+function getCheckboxes() {
+  return Array.from(document.querySelectorAll("input[type='checkbox']"));
+}
+
+function saveSectionState(section) {
+  const state = {};
+  Array.from(lists[section].querySelectorAll("input[type='checkbox']")).forEach((checkbox) => {
+    state[checkbox.dataset.id] = checkbox.checked;
+  });
+  savedBySection[section] = state;
+  localStorage.setItem(stateKeys[section], JSON.stringify(state));
+}
+
+function saveAllSectionStates() {
+  Object.keys(lists).forEach((section) => saveSectionState(section));
+}
+
+function updateSummary() {
+  const dailyBoxes = Array.from(lists.daily.querySelectorAll("input[type='checkbox']"));
+  const dailyDone = dailyBoxes.filter((checkbox) => checkbox.checked).length;
+  const percent = dailyBoxes.length ? Math.round((dailyDone / dailyBoxes.length) * 100) : 0;
+
+  doneCount.textContent = String(dailyDone);
+  totalCount.textContent = String(dailyBoxes.length);
+  percentCount.textContent = `${percent}%`;
+  dailyCount.textContent = `${dailyDone}/${dailyBoxes.length}`;
+}
+
+function clearToday() {
+  getCheckboxes().forEach((checkbox) => {
+    checkbox.checked = false;
+    checkbox.closest("li").classList.remove("checked");
+  });
+
+  notes.value = "";
+  Object.entries(stateKeys).forEach(([section, key]) => {
+    savedBySection[section] = {};
+    localStorage.removeItem(key);
+  });
+  localStorage.removeItem(notesKey);
+  updateSummary();
+}
+
+function removeFromOrders(itemId) {
+  Object.keys(planConfig.order).forEach((section) => {
+    planConfig.order[section] = planConfig.order[section].filter((id) => id !== itemId);
+  });
+}
+
+function removeItem(item) {
+  if (item.custom) {
+    planConfig.custom = planConfig.custom.filter((customItem) => customItem.id !== item.id);
+  } else if (!planConfig.removed.includes(item.id)) {
+    planConfig.removed = [...planConfig.removed, item.id];
+    delete planConfig.sections[item.id];
+  }
+
+  removeFromOrders(item.id);
+  Object.keys(savedBySection).forEach((section) => {
+    delete savedBySection[section][item.id];
+  });
+  renderPlan();
+  saveAllSectionStates();
+  updateSummary();
+}
+
+function moveItemWithinSection(section, itemId, direction) {
+  const currentOrder = getVisibleItems(section).map((item) => item.id);
+  const fromIndex = currentOrder.indexOf(itemId);
+  const toIndex = fromIndex + direction;
+
+  if (fromIndex < 0 || toIndex < 0 || toIndex >= currentOrder.length) {
+    return;
+  }
+
+  const nextOrder = [...currentOrder];
+  const [movedItem] = nextOrder.splice(fromIndex, 1);
+  nextOrder.splice(toIndex, 0, movedItem);
+  planConfig.order[section] = nextOrder;
+  renderPlan();
+  updateSummary();
+}
+
+function moveItemToSection(item, targetSection) {
+  const currentSection = getItemSection(item);
+
+  if (currentSection === targetSection) {
+    return;
+  }
+
+  if (item.custom) {
+    planConfig.custom = planConfig.custom.map((customItem) =>
+      customItem.id === item.id ? { ...customItem, section: targetSection } : customItem
+    );
+  } else {
+    planConfig.sections[item.id] = targetSection;
+  }
+
+  removeFromOrders(item.id);
+  planConfig.order[targetSection] = [...(planConfig.order[targetSection] || []), item.id];
+  const checked = Boolean(savedBySection[currentSection] && savedBySection[currentSection][item.id]);
+  if (savedBySection[currentSection]) {
+    delete savedBySection[currentSection][item.id];
+  }
+  if (checked) {
+    savedBySection[targetSection][item.id] = true;
+  }
+  saveSectionState(currentSection);
+  saveSectionState(targetSection);
+  renderPlan();
+  updateSummary();
+}
+
+function applyPendingSectionChanges() {
+  Object.entries(pendingSectionChanges).forEach(([itemId, targetSection]) => {
+    const item = getAllItems().find((candidate) => candidate.id === itemId);
+
+    if (!item || getItemSection(item) === targetSection) {
+      return;
+    }
+
+    moveItemToSection(item, targetSection);
+  });
+
+  pendingSectionChanges = {};
+}
+
+function addCustomItem(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const section = form.dataset.addSection;
+  const formData = new FormData(form);
+  const title = String(formData.get("title") || "").trim();
+  const note = String(formData.get("note") || "").trim();
+
+  if (!title) {
+    return;
+  }
+
+  const id = `custom-${Date.now()}`;
+
+  planConfig.custom = [
+    ...planConfig.custom,
+    {
+      id,
+      section,
+      title,
+      note,
+      custom: true
+    }
+  ];
+  planConfig.order[section] = [...(planConfig.order[section] || []), id];
+
+  form.reset();
+  renderPlan();
+  updateSummary();
+}
+
+function restoreDefaultItems() {
+  planConfig.removed = [];
+  planConfig.sections = {};
+  planConfig.order = createInitialOrder();
+
+  planConfig.custom.forEach((item) => {
+    if (!planConfig.order[item.section].includes(item.id)) {
+      planConfig.order[item.section].push(item.id);
+    }
+  });
+
+  renderPlan();
+  updateSummary();
+}
+
+function toggleEditMode() {
+  if (isEditing) {
+    applyPendingSectionChanges();
+  } else {
+    pendingSectionChanges = {};
+  }
+
+  isEditing = !isEditing;
+  document.body.classList.toggle("is-editing", isEditing);
+  editPlan.textContent = isEditing ? "Concluir edicao" : "Editar";
+  editPlan.setAttribute("aria-pressed", String(isEditing));
+}
+
+currentDate.textContent = dateFormatter.format(today);
+
+if (tomorrowGospelLink && tomorrowGospelDate) {
+  const tomorrowKey = getTomorrowKey(dayKey);
+  const tomorrowDate = new Date(`${tomorrowKey}T12:00:00`);
+  tomorrowGospelLink.href = `https://evangelhoquotidiano.org/PT/gospel/${tomorrowKey}`;
+  tomorrowGospelDate.textContent = `Leitura de ${shortDateFormatter.format(tomorrowDate)}.`;
+}
+
+loadDailyMeditation();
+loadRosaryOfDay();
+notes.value = localStorage.getItem(notesKey) || "";
+notes.addEventListener("input", () => localStorage.setItem(notesKey, notes.value));
+clearDay.addEventListener("click", clearToday);
+editPlan.addEventListener("click", toggleEditMode);
+restoreDefaults.addEventListener("click", restoreDefaultItems);
+addItemForms.forEach((form) => form.addEventListener("submit", addCustomItem));
+if (markRosaryDone) {
+  markRosaryDone.addEventListener("click", markRosaryAsDone);
+}
+
+renderPlan();
+updateSummary();
+
   </script>
 </body>
 </html>
